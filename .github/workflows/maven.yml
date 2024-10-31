@@ -25,3 +25,10 @@ jobs:
       run: mvn test
     - name: Performance Testing
       run: mvn verify -P performance-tests
+       
+       # Docker Build and Tag
+    - name: Docker Build
+      run: |
+        docker build -t my-app:latest .
+        docker tag my-app:latest nexus.yourdomain.com/nchandru360/gitactions/my-app:latest
+        docker tag my-app:latest jfrog.yourdomain.com/nchandru360/gitactions/my-app:latest
