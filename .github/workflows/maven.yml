@@ -40,4 +40,4 @@ jobs:
  
     # Docker Push to JFrog
     - name: Docker Push to JFrog
-      run: docker push http://jcenter.bintray.com/java/my-app:latest    
+      run: docker push http://jcenter.bintray.com/java/my-app:latest     
