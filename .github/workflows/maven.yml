@@ -21,3 +21,7 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn clean install
+    - name: Unit and Fundamental Testing
+      run: mvn test
+    - name: Performance Testing
+      run: mvn verify -P performance-tests
