@@ -32,3 +32,12 @@ jobs:
         docker build -t my-app:latest .
         docker tag my-app:latest nexus.yourdomain.com/nchandru360/gitactions/my-app:latest
         docker tag my-app:latest jfrog.yourdomain.com/nchandru360/gitactions/my-app:latest
+
+    # Docker Login to JFrog
+    - name: Docker Login to JFrog
+      run: |
+        echo "${{ secrets.JFROG_PASSWORD }}" | docker login  https://jcenter.bintray.com -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
+ 
+    # Docker Push to JFrog
+    - name: Docker Push to JFrog
+      run: docker push https://jcenter.bintray.com/java/my-app:latest    
