@@ -32,6 +32,16 @@ jobs:
         docker build -t my-app:latest .
         docker tag my-app:latest nexus.yourdomain.com/nchandru360/gitactions/my-app:latest
         docker tag my-app:latest jfrog.yourdomain.com/nchandru360/gitactions/my-app:latest
+    - name: Log in to JFrog Artifactory
+      run: echo ${{ secrets.JFROG_PASSWORD }} | docker login maven.jfrog.io -u ${{ secrets.JFROG_USERNAME }} --password-stdin
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+          context: .
+          push: true
+          tags: maven.jfrog.io/nchandru360/gitactions/my-app:latest
+
 
     # Docker Login to JFrog
     - name: Docker Login to JFrog
