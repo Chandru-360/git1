@@ -36,7 +36,7 @@ jobs:
     # Docker Login to JFrog
     - name: Docker Login to JFrog
       run: |
-        echo "${{ secrets.JFROG_PASSWORD }}" | docker login http://3.143.143.164:8081 -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
+        echo "${{ secrets.JFROG_PASSWORD }}" | docker login http://3.143.143.164:8081/ -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
  
     # Docker Push to JFrog
     - name: Docker Push to JFrog
