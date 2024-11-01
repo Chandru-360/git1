@@ -25,17 +25,9 @@ jobs:
       run: mvn test
     - name: Performance Testing
       run: mvn verify -P performance-tests
-       
-       # Docker Build and Tag
-    - name: Docker Build
-      run: |
-        docker build -t my-app:latest .
-        docker tag my-app:latest 18.224.153.244:8081/nchandru360/gitactions/my-app:latest
-    # Docker Login to Nexus
-    - name: Docker Login to Nexus
-      run: |
-         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login 18.224.153.244:8081 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
- 
-      # Docker Push to Nexus
-    - name: Docker Push to Nexus
-      run: docker push 18.224.153.244:8081/repository/test/my-app:latest
+    - name: Build and analyze
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Sonartoken
