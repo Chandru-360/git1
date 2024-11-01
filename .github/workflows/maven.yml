@@ -30,7 +30,7 @@ jobs:
     - name: Docker Build
       run: |
         docker build -t my-app:latest .
-        docker tag my-app:latest http://18.224.153.244:8081/nchandru360/gitactions/my-app:latest
+        docker tag my-app:latest 18.224.153.244:8081/nchandru360/gitactions/my-app:latest
     # Docker Login to Nexus
     - name: Docker Login to Nexus
       run: |
