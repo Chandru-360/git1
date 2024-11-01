@@ -32,22 +32,11 @@ jobs:
         docker build -t my-app:latest .
         docker tag my-app:latest nexus.yourdomain.com/nchandru360/gitactions/my-app:latest
         docker tag my-app:latest jfrog.yourdomain.com/nchandru360/gitactions/my-app:latest
-    - name: Log in to JFrog Artifactory
-      run: echo ${{ secrets.JFROG_PASSWORD }} | docker login maven.jfrog.io -u ${{ secrets.JFROG_USERNAME }} --password-stdin
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-          context: .
-          push: true
-          tags: maven.jfrog.io/nchandru360/gitactions/my-app:latest
-
-
-    # Docker Login to JFrog
-    - name: Docker Login to JFrog
+    # Docker Login to Nexus
+    - name: Docker Login to Nexus
       run: |
-        echo "${{ secrets.JFROG_PASSWORD }}" | docker login https://jcenter.bintray.com:8081 -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
+         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login http://18.224.153.244:8081 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
  
-    # Docker Push to JFrog
-    - name: Docker Push to JFrog
-      run: docker push http://jcenter.bintray.com/java/my-app:latest     
+      # Docker Push to Nexus
+    - name: Docker Push to Nexus
+      run: docker push http://18.224.153.244:8081/Gitactions/my-app:latest
