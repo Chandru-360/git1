@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: http://18.118.36.159:8081/repository/test/v2/repository/test/my-app/manifests/latest
+          image: http://18.118.36.159:8081/repository/test/my-app:latest
           ports:
             - containerPort: 80
