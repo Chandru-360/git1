@@ -38,7 +38,7 @@ jobs:
     # Docker Login to Nexus
     - name: Docker Login to Nexus
       run: |
-         echo "${{ secrets.NEXUS_PASSWORD }}" | http://docker login 18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
+         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login http://18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
  
       # Docker Push to Nexus
     - name: Docker Push to Nexus
