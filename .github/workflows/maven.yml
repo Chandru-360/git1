@@ -30,7 +30,7 @@ jobs:
     - name: Docker Build
       run: |
         docker build -t my-app:latest .
-       # docker tag my-app:latest 18.224.153.244:8082/test/my-app:latest
+       # docker tag my-app:latest http://18.224.153.244:8082/test/my-app:latest
     - name: Set timeout
       run: |
         export DOCKER_CLIENT_TIMEOUT=300
@@ -38,8 +38,8 @@ jobs:
     # Docker Login to Nexus
     - name: Docker Login to Nexus
       run: |
-         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login 18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
+         echo "${{ secrets.NEXUS_PASSWORD }}" | http://docker login 18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
  
       # Docker Push to Nexus
     - name: Docker Push to Nexus
-      run: docker push 18.224.153.244:8082/test/my-app:latest
+      run: docker push http://18.224.153.244:8082/test/my-app:latest
