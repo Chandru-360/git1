@@ -13,7 +13,6 @@ jobs:
       MAVEN_HOME: /opt/maven
       DOCKER_REGISTRY: 18.118.36.159:8082
       DOCKER_IMAGE: my-app
-      NEXUS_CREDENTIALS: ${{ secrets.NEXUS_CREDENTIALS }}
 
     steps:
     - name: Checkout Code
@@ -23,7 +22,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'adopt'  # Specify the distribution here
+        distribution: 'adopt'
 
     - name: Build with Maven
       run: mvn clean install
@@ -41,6 +40,8 @@ jobs:
       run: docker build -t ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest .
 
     - name: Docker Login & Push to Nexus
+      env:
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run: |
-        echo ${{ secrets.NEXUS_CREDENTIALS }} | docker login ${{ env.DOCKER_REGISTRY }} -u admin --password-stdin
+        echo $NEXUS_PASSWORD | docker login ${{ env.DOCKER_REGISTRY }} -u admin --password-stdin
         docker push ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest
