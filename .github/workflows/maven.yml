@@ -31,6 +31,10 @@ jobs:
       run: |
         docker build -t my-app:latest .
        # docker tag my-app:latest 18.224.153.244:8081/test/my-app:latest
+    - name: Set timeout
+      run: |
+        export DOCKER_CLIENT_TIMEOUT=300
+           export COMPOSE_HTTP_TIMEOUT=300
     # Docker Login to Nexus
     - name: Docker Login to Nexus
       run: |
