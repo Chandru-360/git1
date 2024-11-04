@@ -30,12 +30,12 @@ jobs:
     - name: Docker Build
       run: |
         docker build -t my-app:latest .
-        docker tag my-app:latest 18.224.153.244:8082/nchandru360/gitactions/my-app:latest
+        docker tag my-app:latest 18.224.153.244:8082/test/my-app:latest
     # Docker Login to Nexus
     - name: Docker Login to Nexus
       run: |
-         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login http://18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
+         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login 18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
  
       # Docker Push to Nexus
     - name: Docker Push to Nexus
-      run: docker push http://18.224.153.244:8082/Gitactions/my-app:latest
+      run: docker push 18.224.153.244:8082/test/my-app:latest
