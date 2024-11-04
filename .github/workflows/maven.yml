@@ -1,45 +1,59 @@
-name: project cicd flow
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
+    env:
+      MAVEN_HOME: /opt/maven
+      DOCKER_REGISTRY: 18.118.36.159:8082
+      DOCKER_IMAGE: my-app
+      NEXUS_CREDENTIALS: ${{ secrets.NEXUS_CREDENTIALS }}
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
       with:
-        java-version: '1.8'
-        distribution: 'adopt'
-        cache: maven
+        java-version: '11'
+
     - name: Build with Maven
       run: mvn clean install
-    - name: Unit and Fundamental Testing
+
+    - name: Unit Testing
       run: mvn test
+
+    - name: Functional Testing
+      run: mvn verify -DtestSuite=functional
+
     - name: Performance Testing
-      run: mvn verify -P performance-tests
-       
-       # Docker Build and Tag
-    - name: Docker Build
+      run: mvn verify -DtestSuite=performance
+
+    # Uncomment and configure the following steps if you need SonarQube analysis
+    # - name: SonarQube Analysis
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #   run: mvn sonar:sonar -Dsonar.projectKey=${{ secrets.SONARQUBE_PROJECT_KEY }}
+
+    - name: Build Docker Image
+      run: docker build -t ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest .
+
+    - name: Docker Login & Push to Nexus
       run: |
-        docker build -t my-app:latest .
-       # docker tag my-app:latest http://18.224.153.244:8082/test/my-app:latest
-    - name: Set timeout
-      run: |
-        export DOCKER_CLIENT_TIMEOUT=300
-           export COMPOSE_HTTP_TIMEOUT=300
-    # Docker Login to Nexus
-    - name: Docker Login to Nexus
-      run: |
-         echo "${{ secrets.NEXUS_PASSWORD }}" | docker login http://18.224.153.244:8082 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
- 
-      # Docker Push to Nexus
-    - name: Docker Push to Nexus
-      run: docker push http://18.224.153.244:8082/test/my-app:latest
+        echo ${{ secrets.NEXUS_CREDENTIALS }} | docker login ${{ env.DOCKER_REGISTRY }} -u admin --password-stdin
+        docker push ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest
+
+    # Uncomment and configure the following steps if you need to push artifacts to JFrog
+    # - name: Push Artifact to JFrog
+    #   run: curl -u${{ secrets.JFROG_CREDENTIALS_USR }}:${{ secrets.JFROG_CREDENTIALS_PSW }} -T target/*.jar ${{ secrets.JFROG_REPO_URL }}/my-app/
+
+    # Uncomment and configure the following steps if you need to deploy to Kubernetes via Argo CD
+    # - name: Deploy to Kubernetes via Argo CD
+    #   run: argocd app sync ${{ secrets.ARGOCD_APP_NAME }} --auth-token ${{ secrets.ARGOCD_AUTH_TOKEN }}
