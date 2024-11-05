@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: 18.118.36.159:8082/repository/test/my-app:latest
+          image: userxy2015/ngnix:latest
           ports:
             - containerPort: 80
       imagePullSecrets:
