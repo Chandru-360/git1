@@ -18,5 +18,5 @@ spec:
           image: 18.118.36.159:8081/repository/test/my-app:latest
           ports:
             - containerPort: 80
-       imagePullSecrets:
+      imagePullSecrets:
         - name: my-registry-secret
