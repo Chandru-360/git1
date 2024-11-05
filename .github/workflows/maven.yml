@@ -35,6 +35,15 @@ jobs:
 
     - name: Performance Testing
       run: mvn verify -DtestSuite=performance
+      
+    - name: SonarQube Analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.projectKey=Argocd \
+          -Dsonar.host.url=http://3.145.203.136:9000 \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
     - name: Build Docker Image
       run: docker build -t ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest .
