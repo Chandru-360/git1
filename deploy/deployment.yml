@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: hello-world:latest
+          image: repository/test/my-app:latest
           ports:
             - containerPort: 80
       imagePullSecrets:
