@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: chandru66.jfrog.io/artifactory/docker-example-docker-local/my-app/latest
+          image: chandru66.jfrog.io/artifactory/docker-example-docker-remote/my-app/latest
           ports:
             - containerPort: 80
 
