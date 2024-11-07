@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-nexus
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app-nexus
+  template:
+    metadata:
+      labels:
+        app: my-app-nexus
+    spec:
+      containers:
+        - name: my-app
+          image: 18.216.88.91:9002/repository/gitactions/my-app:latest
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: regcred-nexus
