@@ -11,8 +11,12 @@ jobs:
 
     env:
       MAVEN_HOME: /opt/maven
-      DOCKER_REGISTRY: 18.118.36.159:8082
-      DOCKER_IMAGE: my-app
+     # DOCKER_IMAGE: my-app
+      NEXU_REPO_URL: "18.216.88.91:8081/repository/test"
+      JFROG_REPO_URL: "3.128.29.130:8081/artifactory/test"
+      DOCKER_CLI_EXPERIMENTAL: "enabled"
+   #   DOCKER_TLS_VERIFY: "0"
+      DOCKER_CONTENT_TRUST: "0"
 
     steps:
     - name: Checkout Code
@@ -45,13 +49,32 @@ jobs:
           -Dsonar.host.url=http://3.145.203.136:9000 \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-    - name: Build Docker Image
-      run: docker build -t ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest .
-
-    - name: Docker Login & Push to Nexus
-      # env:
-      #   NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+    - name: Set up Docker daemon configuration for insecure registry
       run: |
-        echo "admin" | docker login ${{ env.DOCKER_REGISTRY }} -u admin --password-stdin || { echo "Docker login failed"; exit 1; }
-        docker push ${{ env.DOCKER_REGISTRY }}/repository/test/${{ env.DOCKER_IMAGE }}:latest || { echo "Docker push failed"; exit 1; }
+        sudo mkdir -p /etc/docker
+        echo '{"insecure-registries": ["18.216.88.91:9002","3.128.29.130:8082"]}' | sudo tee /etc/docker/daemon.json
+        sudo systemctl restart docker
 
+    - name: Docker Login to nexus
+      run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login 18.216.88.91:9002 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
+      
+    - name: Docker Login to jfrog
+      run: echo "${{ secrets.JFROG_PASSWORD }}" | docker login chandru66.jfrog.io -u "${{ secrets.JFROG_USERNAME }}" --password-stdin
+ 
+    - name: Docker Build
+      run: docker build -t nchandru360/gitactions/my-app:latest .
+
+    - name: Docker Build for Jfrog
+      run: docker build -t chandru66.jfrog.io/docker-example-docker/my-app:latest .  
+      
+    - name: Docker Tag to nexus
+      run: docker tag nchandru360/gitactions/my-app:latest 18.216.88.91:9002/repository/gitactions/my-app:latest
+
+    - name: Docker Tag jforg
+      run: docker tag chandru66.jfrog.io/docker-example-docker/my-app:latest chandru66.jfrog.io/docker-example-docker/my-app:latest
+ 
+    - name: Docker Push to Nexus
+      run: docker push 18.216.88.91:9002/repository/gitactions/my-app:latest
+
+    - name: Docker Push to Jfrog
+      run: docker push chandru66.jfrog.io/docker-example-docker/my-app:latest
