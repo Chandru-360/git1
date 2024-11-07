@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: 18.216.88.91:9002/repository/gitactions/my-app:latest
+          image: https://chandru66.jfrog.io/artifactory/docker-example-docker-local/my-app/latest
           ports:
             - containerPort: 80
