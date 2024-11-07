@@ -15,8 +15,6 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: 18.118.36.159:8082/repository/test/my-app:latest
+          image: 18.216.88.91:9002/repository/gitactions/my-app:latest
           ports:
             - containerPort: 80
-      imagePullSecrets:
-        - name: my-registry-secret
