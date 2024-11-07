@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-app
-          image: 18.216.88.91:9002/repository/gitactions/my-app:latest
+          image: http://18.216.88.91:9002/repository/gitactions/my-app:latest
           imagePullPolicy: Always 
           ports:
             - containerPort: 80
