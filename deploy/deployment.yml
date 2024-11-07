@@ -18,3 +18,6 @@ spec:
           image: chandru66.jfrog.io/artifactory/docker-example-docker-local/my-app/latest
           ports:
             - containerPort: 80
+
+      imagePullSecrets:
+        - name: regcred
