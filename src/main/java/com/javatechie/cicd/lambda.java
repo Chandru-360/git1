@@ -3,7 +3,7 @@ package com.javatechie.cicd;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import java.util.Map;
-public class LambdaFunction implements RequestHandler<Map<String, String>, String> {
+public class lambda implements RequestHandler<Map<String, String>, String> {
     @Override
     public String handleRequest(Map<String, String> event, Context context) {
         context.getLogger().log("Lambda function is invoked with event: " + event);
